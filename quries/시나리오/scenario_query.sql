@@ -122,3 +122,73 @@ ORDER BY score_sum DESC
 LIMIT 3);
 SELECT *
 FROM beststudent ;
+
+-- 매 기수마다 1과목 시험 성적 상위 1~5등 학생들은 기숙사 우선 입주권이 부여된다.
+-- 기수, 1과목 성적 점수, 기숙사 지원 여부를 고려하여 인원을 선발한 후 해당 인원의 std_id는 dormitory 테이블로 관리한다 
+-- 1기와 2기 기숙사 데이터를 차례로 삽입해보자.  
+
+-- 1기 1과목 성적 상위  5명 정보 조회 쿼리
+SELECT  a.std_id
+		  , a.gen_id
+		  , a.std_vol
+		  , b.test_score
+		  , b.sub_id
+  FROM  student AS a
+  JOIN  score AS b
+    ON  a.std_id = b.std_id
+ WHERE  a.gen_id = 1
+ 		  AND b.sub_id = 1
+ 		  AND a.std_vol = 'y'
+ order
+    BY  b.test_score DESC
+ LIMIT  5
+ 		;
+
+-- dormitory table에 1기 1과목 성적 상위 5명 std_id 삽입쿼리
+INSERT  
+  INTO  dormitory(std_id)
+
+			SELECT  a.std_id
+			  FROM  student AS a
+			  JOIN  score AS b
+			    ON  a.std_id = b.std_id
+			 WHERE  a.gen_id = 1
+			 		  AND b.sub_id = 1
+			 		  AND a.std_vol = 'y'
+			 order
+			    BY  b.test_score DESC
+			 LIMIT  5
+	    ;
+
+-- 2기 1과목 성적 상위  5명 정보 조회 쿼리
+SELECT  a.std_id
+		  , a.gen_id
+		  , a.std_vol
+		  , b.test_score
+		  , b.sub_id
+  FROM  student AS a
+  JOIN  score AS b
+    ON  a.std_id = b.std_id
+ WHERE  a.gen_id = 2
+ 		  AND b.sub_id = 1
+ 		  AND a.std_vol = 'y'
+ order
+    BY  b.test_score DESC
+ LIMIT  5
+ 		;
+
+-- dormitory table에 2기 1과목 성적 상위 5명 std_id 삽입쿼리
+INSERT  
+  INTO  dormitory(std_id)
+
+			SELECT  a.std_id
+			  FROM  student AS a
+			  JOIN  score AS b
+			    ON  a.std_id = b.std_id
+			 WHERE  a.gen_id = 2
+			 		  AND b.sub_id = 1
+			 		  AND a.std_vol = 'y'
+			 order
+			    BY  b.test_score DESC
+			 LIMIT  5
+		;

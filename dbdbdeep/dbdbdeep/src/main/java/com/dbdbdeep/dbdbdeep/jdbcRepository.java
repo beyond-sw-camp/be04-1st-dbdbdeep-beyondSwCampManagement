@@ -109,9 +109,37 @@ public class jdbcRepository {
 
 
     ///////////////기능
+    /// 출결조회
     public List<Rollbook> getRollbooksByStudentId(Integer std_id) {
         System.out.println(std_id);
         String sql = "SELECT * FROM rollbook WHERE std_id = ?";
         return jdbcTemplate.query(sql, new Object[]{std_id}, new BeanPropertyRowMapper<>(Rollbook.class));
     }
+    /// 지원금 산정
+    public List<Money> getMoneyByStudentId(Integer std_id) {
+        System.out.println(std_id);
+        String sql = "SELECT  a.std_id AS '학번'\n" +
+                "\t\t  , b.std_name\n" +
+                "\t\t  , CONCAT(TRUNCATE(((a.총교육일수- (a.결석 + TRUNCATE((a.조퇴+a.지각+a.외출)/3,0)))/a.총교육일수)*100,0),'%') AS '출석율'\n" +
+                "\t\t  , CASE\n" +
+                "\t\t  \t\tWHEN TRUNCATE(((a.총교육일수- (a.결석 + TRUNCATE((a.조퇴+a.지각+a.외출)/3,0)))/a.총교육일수)*100,0) >= 80\n" +
+                "\t\t  \t\tTHEN (a.총교육일수- (a.결석 + TRUNCATE((a.조퇴+a.지각+a.외출)/3,0)))*5800 + 200000\n" +
+                "\t\t\t \tELSE 0 END AS '지원금산정'\n" +
+                "  FROM  (\n" +
+                "\t\t\tSELECT  std_id\n" +
+                "\t\t\t\t\t  , COUNT(CASE WHEN STATUS = '출석' THEN 1 ELSE NULL END) AS '출석'\n" +
+                "\t\t\t\t\t  , COUNT(CASE WHEN STATUS = '결석' THEN 1 ELSE NULL END) AS '결석'\n" +
+                "\t\t\t\t\t  , COUNT(CASE WHEN STATUS = '조퇴' THEN 1 ELSE NULL END) AS '조퇴'\n" +
+                "\t\t\t\t\t  , COUNT(CASE WHEN STATUS = '지각' THEN 1 ELSE NULL END) AS '지각'\n" +
+                "\t\t\t\t\t  , COUNT(CASE WHEN STATUS = '외출' THEN 1 ELSE NULL END) AS '외출'\n" +
+                "\t\t\t\t\t  , COUNT(std_id) AS '총교육일수'       \n" +
+                "\t\t\tFROM  rollbook r\n" +
+                "\t\t\tWHERE MONTH(rb_date) = 12 AND r.std_id = ?\n" +
+                "\t\t) AS a\n" +
+                "  JOIN  student AS b\n" +
+                "  ON a.std_id = b.std_id\n" +
+                ";";
+        return jdbcTemplate.query(sql, new Object[]{std_id}, new BeanPropertyRowMapper<>(Money.class));
+    }
+
 }

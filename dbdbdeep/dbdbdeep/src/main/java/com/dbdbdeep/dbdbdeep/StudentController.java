@@ -54,10 +54,12 @@ public class StudentController {
     }
 
     @GetMapping("/student_roll")
-    public String student_roll(Model model, @RequestParam(value="studentId") Integer key) {
+    public String student_roll(Model model, Model model1, @RequestParam(value="studentId") Integer key) {
         List<Rollbook> rollbookList = this.jdbcRepository.getRollbooksByStudentId(key);
         model.addAttribute("rollbookList", rollbookList);
-        System.out.println(rollbookList);
+
+        List<Money> money = this.jdbcRepository.getMoneyByStudentId(key);
+        model1.addAttribute("money", money);
         return "rollbook_list";
     }
 

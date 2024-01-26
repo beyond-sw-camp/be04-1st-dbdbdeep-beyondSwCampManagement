@@ -3328,9 +3328,9 @@ INSERT INTO `student` (`std_id`, `std_name`, `std_phone`, `std_mail`, `gen_id`, 
 	(55, '송재현', '010-9374-6285', 'lpostans1i@yale.edu', 2, 1, 'y'),
 	(56, '최지현', '010-7391-6285', 'ahuggons1j@samsung.com', 2, 2, 'y'),
 	(57, '장민호', '010-7391-6285', 'lsabattier1k@nba.com', 2, 3, 'y'),
-	(58, '윤서현', '010-2468-5193', 'hmagog1l@mac.com', 1, 4, 'y'),
-	(59, '윤서현', '010-2468-1357', 'freuven1m@globo.com', 1, 5, 'n'),
-	(60, '장민수', '010-2468-5193', 'gskain1n@mozilla.com', 1, 6, 'n');
+	(58, '윤서현', '010-2468-5193', 'hmagog1l@mac.com', 2, 4, 'y'),
+	(59, '윤서현', '010-2468-1357', 'freuven1m@globo.com', 2, 5, 'n'),
+	(60, '장민수', '010-2468-5193', 'gskain1n@mozilla.com', 2, 6, 'n');
 
 -- 테이블 dbdbdeep.subject 구조 내보내기
 CREATE TABLE IF NOT EXISTS `subject` (

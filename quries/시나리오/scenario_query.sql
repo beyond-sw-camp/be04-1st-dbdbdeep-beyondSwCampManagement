@@ -95,3 +95,30 @@ SELECT  a.학번
     ON  a.학번 = b.std_id
  WHERE  TRUNCATE(((a.출석- (a.결석 + TRUNCATE((a.조퇴+a.지각+a.외출)/3,0)))/a.총교육일수)*100,0) < 80
 		  ; 
+
+
+
+-- 매 기수마다 성적 총합 1~3등 학생들은 우수 수강생으로 선발되어 한화시스템 인턴쉽 기회가 제공되며 해당 데이터는 테이블로 따로 관리된다.
+-- 1기와 2기 우수수강생 데이터를 차례로 삽입해보자.  
+
+-- 1기 우수수강생 삽입
+INSERT INTO beststudent
+(SELECT st.std_id, SUM(sc.test_score) AS score_sum
+FROM student st
+JOIN score sc ON (st.std_id=sc.std_id)
+WHERE st.gen_id=1
+GROUP BY st.std_id
+ORDER BY score_sum DESC
+LIMIT 3);
+
+-- 2기 우수수강생 삽입
+INSERT INTO beststudent
+(SELECT st.std_id, SUM(sc.test_score) AS score_sum
+FROM student st
+JOIN score sc ON (st.std_id=sc.std_id)
+WHERE st.gen_id=2
+GROUP BY st.std_id
+ORDER BY score_sum DESC
+LIMIT 3);
+SELECT *
+FROM beststudent ;

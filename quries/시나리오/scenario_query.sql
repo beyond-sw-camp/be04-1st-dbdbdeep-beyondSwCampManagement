@@ -40,14 +40,6 @@ WHERE st.gen_id=1
 GROUP BY st.std_id
 ORDER BY sum(sc.test_score) DESC LIMIT 3;
 
--- 빈 테이블을 만들어두고 합격수강생 테이블의 기숙사 희망 여부가 ‘y’인 학생 중 첫번째 성적 1~5등의 정보를 넣는 과정과 목록 보여주기
--- 이것도 일단 1기에서 학생들 뽑는 쿼리만
--- (테이블에 넣는 거는 쿼리 돌려서 들어가는 과정을 보여줘야할듯)
-SELECT st.std_id AS '학생 id', st.std_name AS '학생 이름', sc.test_score AS '첫번째 시험 성적'
-FROM student st
-JOIN score sc ON (st.std_id=sc.std_id)
-WHERE st.std_vol='y' AND sc.sub_id=1
-ORDER BY sc.test_score DESC LIMIT 5;
 
 -- 정부에서 지원금이 나왔다. 저번달  학생별 출결에 비례하는 지원금 목록을 만들어 보자
 SELECT  a.학번

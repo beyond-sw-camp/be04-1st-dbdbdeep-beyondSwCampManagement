@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>수강생 관리</title>
+</head>
+<body>
+<header class="bg-dark text-white text-center py-4">
+    <img src="/logo.png" alt="부트캠프 로고" class="img-fluid mb-3" style="max-width: 200px;">
+    <h1>BEYOND SW캠프 관리 시스템 - 수강생 관리</h1>
+</header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/home">홈</a></li>
+            <li class="nav-item"><a class="nav-link" href="/teacher_list">강사 관리</a></li>
+            <li class="nav-item"><a class="nav-link" href="/manager_list">매니저 관리</a></li>
+            <!-- 다른 메뉴 항목들 추가 -->
+        </ul>
+    </div>
+</nav>
+<main class="container my-4">
+    <h2 class="mb-4">수강생 목록</h2>
+    <div class="float-right mb-4 ml-2">
+        <form action="/search_student" method="post">
+            <div class="input-group">
+                <input type="text" class="form-control" name="data" placeholder="검색어 입력" required>
+                <select class="form-control" name="key" required>
+                    <option value="std_name">이름</option>
+                    <option value="std_phone">연락처</option>
+                    <option value="std_mail">이메일</option>
+                    <!-- 필요한 경우 다른 컬럼들 추가 -->
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">검색</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>수강생 번호</th>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>이메일</th>
+            <th>기수</th>
+            <th>멘토</th>
+            <th>기숙사 선호</th>
+            <th>작업</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${studentList}">
+            <td th:text="${student.std_id}"></td>
+            <td th:text="${student.std_name}"></td>
+            <td th:text="${student.std_phone}"></td>
+            <td th:text="${student.std_mail}"></td>
+            <td th:text="${student.gen_id}"></td>
+            <td th:text="${student.mt_id}"></td>
+            <td th:text="${student.std_vol}"></td>
+            <td>
+                <form th:action="@{/student_roll}" method="get" style="display: inline;">
+                    <input type="hidden" name="studentId" th:value="${student.std_id}">
+                    <button type="submit" class="btn btn-success btn-sm">출결조회</button>
+                </form>
+                <!-- 각 행에 대한 삭제 폼 -->
+                <form action="/del_student" method="post" style="display: inline;">
+                    <input type="hidden" name="studentId" th:value="${student.std_id}">
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                </form>
+            </td>
+        </tr>
+        <!-- 실제 데이터베이스 연동 시 여기에 데이터 출력 -->
+        </tbody>
+    </table>
+    <button class="btn btn-success" data-toggle="modal" data-target="#addStudentModal">수강생 추가</button>
+</main>
+
+<!-- 모달 창 (추가 버튼 클릭 시 나타남) -->
+<div class="modal" id="addStudentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">수강생 추가</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 추가 폼 내용 -->
+                <form id="addManagerForm" action="/add_student" method="post">
+                    <div class="form-group">
+                        <label for="newStudentName">이름</label>
+                        <input type="text" class="form-control" id="newStudentName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentPhone">연락처</label>
+                        <input type="text" class="form-control" id="newStudentPhone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentEmail">이메일</label>
+                        <input type="email" class="form-control" id="newStudentEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentGen">기수</label>
+                        <input type="number" class="form-control" id="newStudentGen" name="gen_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentMento">멘토</label>
+                        <input type="number" class="form-control" id="newStudentMento" name="mt_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentVol">기숙사 선호</label>
+                        <input type="text" class="form-control" id="newStudentVol" name="std_vol" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">추가</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2024 부트캠프 관리 시스템</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
